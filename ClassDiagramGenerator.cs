@@ -10,7 +10,7 @@ using System.IO;
 namespace Diagrams
 {
     /// <summary>
-    /// C#のソースコードからPlantUMLのクラス図を生成するクラス
+    /// Class to generate PlantUML class diagram from C # source code
     /// </summary>
     public class ClassDiagramGenerator : CSharpSyntaxWalker
     {
@@ -21,8 +21,8 @@ namespace Diagrams
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="writer">結果を出力するTextWriter</param>
-        /// <param name="indent">インデントとして使用する文字列</param>
+        /// <param name="writer">TextWriter to output the result</param>
+        /// <param name="indent">String to be used as indent</param>
         public ClassDiagramGenerator(TextWriter writer, string indent)
         {
             this.writer = writer;
@@ -30,7 +30,7 @@ namespace Diagrams
         }
 
         /// <summary>
-        /// インターフェースの定義をPlantUMLの書式で出力する
+        /// Output interface definition in PlantUML format
         /// </summary>
         public override void VisitInterfaceDeclaration(InterfaceDeclarationSyntax node)
         {
@@ -38,7 +38,7 @@ namespace Diagrams
         }
 
         /// <summary>
-        /// クラスの定義をPlantUMLの書式で出力する
+        /// Output definition of class in PlantUML format
         /// </summary>        
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)
         {
@@ -46,7 +46,7 @@ namespace Diagrams
         }
 
         /// <summary>
-        /// 構造体の定義をPlantUMLの書式で出力する
+        /// Output the structure definition in PlantUML format
         /// </summary>
         public override void VisitStructDeclaration(StructDeclarationSyntax node)
         {
@@ -63,7 +63,7 @@ namespace Diagrams
         }
 
         /// <summary>
-        /// 列挙型の定義をPlantUMLの書式で出力する
+        /// Output definition of enum type in PlantUML format
         /// </summary>
         /// <param name="node"></param>
         public override void VisitEnumDeclaration(EnumDeclarationSyntax node)
@@ -78,9 +78,8 @@ namespace Diagrams
         }
 
         /// <summary>
-        /// 型（クラス、インターフェース、構造体)の定義をPlantUMLの書式で出力する
+        /// Output definition of type (class, interface, structure) in PlantUML format
         /// </summary>
-
         private void VisitTypeDeclaration(TypeDeclarationSyntax node, Action visitBase)
         {
             var modifiers = GetTypeModifiersText(node.Modifiers);
@@ -115,7 +114,7 @@ namespace Diagrams
             WriteLine($"{modifiers}{name}({string.Join(", ", args)})");
         }
         /// <summary>
-        /// フィールドの定義を出力する
+        /// Output field definition
         /// </summary>
         public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
         {
@@ -132,7 +131,7 @@ namespace Diagrams
         }
 
         /// <summary>
-        /// プロパティの定義を出力する
+        /// Output property definition
         /// </summary>        
         public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
         {
@@ -150,7 +149,7 @@ namespace Diagrams
         }
 
         /// <summary>
-        /// メソッドの定義を出力する
+        /// Output method definition
         /// </summary>
         public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
         {
@@ -163,7 +162,7 @@ namespace Diagrams
         }
 
         /// <summary>
-        /// 列挙型のメンバーを出力する
+        /// Output enum type members
         /// </summary>
         /// <param name="node"></param>
         public override void VisitEnumMemberDeclaration(EnumMemberDeclarationSyntax node)
@@ -172,20 +171,20 @@ namespace Diagrams
         }
 
         /// <summary>
-        /// 結果出力用TextWriterに、1行書き込む。
+        /// Write one line to the result output TextWriter.
         /// </summary>
         private void WriteLine(string line)
         {
-            //行の先頭にネストの階層分だけインデントを付加する
+            //Append indentation to the beginning of the line by the nesting level
             var space = string.Concat(Enumerable.Repeat(indent, nestingDepth));
             writer.WriteLine(space + line);
         }
 
         /// <summary>
-        /// 型(クラス、インターフェース、構造体)の修飾子を文字列に変換する
+        /// Convert qualifier of type (class, interface, structure) to a string
         /// </summary>
-        /// <param name="modifiers">修飾子のTokenList</param>
-        /// <returns>変換後の文字列</returns>
+        /// <param name="modifiers">TokenList of the modifier</param>
+        /// <returns>String after conversion</returns>
         private string GetTypeModifiersText(SyntaxTokenList modifiers)
         {
             var tokens = modifiers.Select(token =>
@@ -212,9 +211,9 @@ namespace Diagrams
         }
 
         /// <summary>
-        /// 型のメンバーの修飾子を文字列に変換する
+        /// Convert qualifier of type member to string
         /// </summary>
-        /// <param name="modifiers">修飾子のTokenList</param>
+        /// <param name="modifiers">TokenList of the modifier</param>
         /// <returns></returns>
         private string GetMemberModifiersText(SyntaxTokenList modifiers)
         {
