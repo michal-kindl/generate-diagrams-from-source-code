@@ -53,7 +53,7 @@ namespace Diagrams
             var name = node.Identifier.ToString();
             var typeParam = node.TypeParameterList?.ToString() ?? "";
 
-            WriteLine($"class {name}{typeParam} <<struct>> {{");
+            WriteLine($"class **{name}{typeParam}** <<struct>> {{");
 
             nestingDepth++;
             base.VisitStructDeclaration(node);
@@ -68,7 +68,7 @@ namespace Diagrams
         /// <param name="node"></param>
         public override void VisitEnumDeclaration(EnumDeclarationSyntax node)
         {
-            WriteLine($"{node.EnumKeyword} {node.Identifier} {{");
+            WriteLine($"{node.EnumKeyword} **{node.Identifier}** {{");
 
             nestingDepth++;
             base.VisitEnumDeclaration(node);
@@ -88,7 +88,7 @@ namespace Diagrams
             var name = node.Identifier.ToString();
             var typeParam = node.TypeParameterList?.ToString() ?? "";
 
-            WriteLine($"{keyword} {name}{typeParam} {modifiers}{{");
+            WriteLine($"{keyword} **{name}{typeParam}** {modifiers}{{");
 
             nestingDepth++;
             visitBase();
@@ -111,7 +111,7 @@ namespace Diagrams
             var name = node.Identifier.ToString();
             var args = node.ParameterList.Parameters.Select(p => $"{p.Identifier}:{p.Type}");
 
-            WriteLine($"{modifiers}{name}({string.Join(", ", args)})");
+            WriteLine($"{modifiers}**{name}**({string.Join(", ", args)})");
         }
         /// <summary>
         /// Output field definition
@@ -124,7 +124,7 @@ namespace Diagrams
             foreach (var field in variables)
             {
                 var useLiteralInit = field.Initializer?.Value?.Kind().ToString().EndsWith("LiteralExpression") ?? false;
-                var initValue = useLiteralInit ? (" = " + field.Initializer.Value.ToString()) : "";
+                var initValue = "";// useLiteralInit ? (" = " + field.Initializer.Value.ToString()) : "";
 
                 WriteLine($"{modifiers}{field.Identifier} : {typeName}{initValue}");
             }
@@ -145,7 +145,7 @@ namespace Diagrams
             var useLiteralInit = node.Initializer?.Value?.Kind().ToString().EndsWith("LiteralExpression") ?? false;
             var initValue = useLiteralInit ? (" = " + node.Initializer.Value.ToString()) : "";
 
-            WriteLine($"{modifiers}{name} : {typeName} {string.Join(" ", accessor)}{initValue}");
+            WriteLine($"{modifiers}**{name}**: {typeName} {string.Join(" ", accessor)}{initValue}");
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Diagrams
             var returnType = node.ReturnType.ToString();
             var args = node.ParameterList.Parameters.Select(p => $"{p.Identifier}:{p.Type}");
 
-            WriteLine($"{modifiers}{name}({string.Join(", ", args)}) : {returnType}");
+            WriteLine($"{modifiers}**{name}**({string.Join(", ", args)}) : {returnType}");
         }
 
         /// <summary>

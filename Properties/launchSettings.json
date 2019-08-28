@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "generate-diagrams-from-source-code": {
+      "commandName": "Project",
+      "commandLineArgs": "c:\\Michal\\Projekty\\RTT_Database\\Code\\RTT_Database c:\\Michal\\Projekty\\RTT_Database\\Code\\RTT_Database\\RTT_Database\\Docs\\uml"
+    }
+  }
+}

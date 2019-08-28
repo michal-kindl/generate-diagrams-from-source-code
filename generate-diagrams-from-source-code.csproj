@@ -1,13 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
     <DebugType>portable</DebugType>
     <AssemblyName>generate-diagrams-from-source-code</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>generate-diagrams-from-source-code</PackageId>
-    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50;portable-net45+win8+wp8+wpa81</PackageTargetFallback>
-    <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
+    <StartupObject>Diagrams.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

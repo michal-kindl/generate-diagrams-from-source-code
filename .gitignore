@@ -14,3 +14,5 @@ bld/
 
 # Lock
 project.lock.json
+
+.vs/

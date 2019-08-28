@@ -18,6 +18,8 @@ namespace Diagrams
             Console.WriteLine("*   To generata a class diagram specify a file .cs or a directory          *");
             Console.WriteLine("*                                                                          *");
             Console.WriteLine("****************************************************************************");
+            Console.WriteLine("Usage: ");
+            Console.WriteLine("dotnet run -- [source dir] [output dir]");
 
             // to test Class Diagram
             // args = new[] { @"ClassDiagramGenerator.cs", @"..\uml" }; 
@@ -25,6 +27,7 @@ namespace Diagrams
             if (args.Length < 1)
             {
                 Console.WriteLine("Specify a file or directory");
+                Console.ReadKey();
                 return;
             }
 
@@ -33,7 +36,7 @@ namespace Diagrams
             IEnumerable<string> files;
             if (Directory.Exists(input))
             {
-                files = Directory.EnumerateFiles(Path.GetFullPath(input), "*.cs");
+                files = Directory.EnumerateFiles(Path.GetFullPath(input), "*.cs", SearchOption.AllDirectories);
             }
             else if (File.Exists(input))
             {                
@@ -45,6 +48,7 @@ namespace Diagrams
                 catch
                 {                    
                     Console.WriteLine("Invalid name");
+                    Console.ReadKey();
                     return;
                 }
             }
@@ -69,6 +73,8 @@ namespace Diagrams
                 Directory.CreateDirectory(outputDir);
             }
 
+            List<string> outputFiles = new List<string>();
+
             foreach (var file in files)
             {
                 Console.WriteLine($"Generation PlantUML text for {file}...");
@@ -88,10 +94,38 @@ namespace Diagrams
 
                         writer.Write("@enduml");
                      }                     
-                }               
+                }
+
+                outputFiles.Add(file);
             }
 
+            //--- generate diagram index
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("# Class diagram index");
+
+            outputFiles.ForEach(a => {
+                string className = Path.GetFileNameWithoutExtension(a);
+
+                if (className.Contains("AssemblyInfo") ||
+                    className.Contains("TemporaryGeneratedFile_")) {
+                    return;
+                }
+
+                string classPath = Path.GetDirectoryName(a);
+                string classNamespace = new DirectoryInfo(classPath).Parent.Name;
+                sb.AppendLine($"## #{classNamespace}.{className}");
+                sb.AppendLine();
+                sb.AppendLine("@startuml");
+                sb.AppendLine($@"!include %dirpath%/../../uml/classes/{className}.ClassDiagram.plantuml");
+                sb.AppendLine("@enduml");
+                sb.AppendLine();
+            });
+
+            string indexFullPath = Path.GetFullPath($"{outputDir}/../..");
+            File.WriteAllText($"{indexFullPath}/classes_index.md", sb.ToString());
+
             Console.WriteLine("Completed");
+            Console.ReadKey();
         }
     }
 }
