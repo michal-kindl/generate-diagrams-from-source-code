@@ -17,16 +17,20 @@ namespace Diagrams
         private TextWriter writer;
         private string indent;
         private int nestingDepth = 0;
+        private bool showMethodParameterTypes = true;
+        private bool showMethodParameters = true;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="writer">TextWriter to output the result</param>
         /// <param name="indent">String to be used as indent</param>
-        public ClassDiagramGenerator(TextWriter writer, string indent)
+        public ClassDiagramGenerator(TextWriter writer, string indent, bool showMethodParameters, bool showMethodParameterTypes)
         {
             this.writer = writer;
             this.indent = indent;
+            this.showMethodParameters = showMethodParameters;
+            this.showMethodParameterTypes = showMethodParameterTypes;
         }
 
         /// <summary>
@@ -100,7 +104,15 @@ namespace Diagrams
             {             
                 foreach (var b in node.BaseList.Types)
                 {
-                    WriteLine($"{name} <|-- {b.Type.ToFullString()}");
+                    var nodeBaseType = b.Type.ToFullString();
+                    var shortNodeBaseType = nodeBaseType.Split('<').First();
+
+                    if (nodeBaseType.Contains("<"))
+                    {                        
+                        WriteLine($"class \"{shortNodeBaseType}\" as {nodeBaseType}\n");
+                    }
+
+                    WriteLine($"{name} <|-- {shortNodeBaseType}");
                 }
             }
         }
@@ -109,7 +121,14 @@ namespace Diagrams
         {
             var modifiers = GetMemberModifiersText(node.Modifiers);
             var name = node.Identifier.ToString();
-            var args = node.ParameterList.Parameters.Select(p => $"{p.Identifier}:{p.Type}");
+
+            var args = showMethodParameters
+                ? node.ParameterList.Parameters.Select(p =>
+                    showMethodParameterTypes
+                    ? $"{p.Identifier}:{p.Type}"
+                    : $"{p.Identifier}")
+                : new string[] { };
+            //var args = node.ParameterList.Parameters.Select(p => $"{p.Identifier}:{p.Type}");
 
             WriteLine($"{modifiers}**{name}**({string.Join(", ", args)})");
         }
@@ -156,8 +175,13 @@ namespace Diagrams
             var modifiers = GetMemberModifiersText(node.Modifiers);
             var name = node.Identifier.ToString();
             var returnType = node.ReturnType.ToString();
-            var args = node.ParameterList.Parameters.Select(p => $"{p.Identifier}:{p.Type}");
-
+            var args = showMethodParameters 
+                ? node.ParameterList.Parameters.Select(p =>
+                    showMethodParameterTypes 
+                    ? $"{p.Identifier}:{p.Type}"
+                    : $"{p.Identifier}")
+                : new string[] { };
+            //var args = node.ParameterList.Parameters.Select(p => $"{p.Identifier}:{p.Type}");
             WriteLine($"{modifiers}**{name}**({string.Join(", ", args)}) : {returnType}");
         }
 

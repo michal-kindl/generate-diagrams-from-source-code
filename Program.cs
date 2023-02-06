@@ -19,7 +19,9 @@ namespace Diagrams
             Console.WriteLine("*                                                                          *");
             Console.WriteLine("****************************************************************************");
             Console.WriteLine("Usage: ");
-            Console.WriteLine("dotnet run -- [source dir] [output dir]");
+            Console.WriteLine("dotnet run -- [source dir] [output dir] [showMethParams] [showMethParamTypes]");
+
+            Console.WriteLine(args);
 
             // to test Class Diagram
             // args = new[] { @"ClassDiagramGenerator.cs", @"..\uml" }; 
@@ -75,6 +77,10 @@ namespace Diagrams
 
             List<string> outputFiles = new List<string>();
 
+            bool _showMethodParameters = Boolean.Parse(args[2]);
+            Console.WriteLine(args[2]);
+            bool _showMethodParameterTypes = Boolean.Parse(args[3]);
+
             foreach (var file in files)
             {
                 Console.WriteLine($"Generation PlantUML text for {file}...");
@@ -89,7 +95,7 @@ namespace Diagrams
                     {
                         writer.WriteLine("@startuml");
 
-                        var gen = new ClassDiagramGenerator(writer, "    ");
+                        var gen = new ClassDiagramGenerator(writer, "    ", _showMethodParameters, _showMethodParameterTypes);
                         gen.Visit(root);
 
                         writer.Write("@enduml");
@@ -125,7 +131,7 @@ namespace Diagrams
             File.WriteAllText($"{indexFullPath}/classes_index.md", sb.ToString());
 
             Console.WriteLine("Completed");
-            Console.ReadKey();
+            //Console.ReadKey();
         }
     }
 }
