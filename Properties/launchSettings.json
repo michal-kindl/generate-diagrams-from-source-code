@@ -2,7 +2,7 @@
   "profiles": {
     "generate-diagrams-from-source-code": {
       "commandName": "Project",
-      "commandLineArgs": "c:\\Michal\\Projekty\\RTT_Database\\Code\\RTT_Database c:\\Michal\\Projekty\\RTT_Database\\Code\\RTT_Database\\RTT_Database\\Docs\\uml"
+      "commandLineArgs": "c:\\Michal\\Projekty\\RTT_Database\\Code\\RTT_UserManagementWPF\\RTT_AlertingMT c:\\Michal\\Projekty\\UML_Diagrams\\generate-diagrams-from-source-code\\Docs\\RTT_AlertingMT\\uml\\classes  true true"
     }
   }
 }

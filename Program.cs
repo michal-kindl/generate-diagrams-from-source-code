@@ -63,9 +63,10 @@ namespace Diagrams
             var outputDir = "";
             if (args.Length >= 2)
             {
-                if (Directory.Exists(args[1]))
+                outputDir = args[1];
+                if (!Directory.Exists(args[1]))
                 {
-                    outputDir = args[1];
+                    Directory.CreateDirectory(outputDir);                    
                 }
             }
 

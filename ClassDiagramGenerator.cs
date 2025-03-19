@@ -157,9 +157,12 @@ namespace Diagrams
             var modifiers = GetMemberModifiersText(node.Modifiers);
             var name = node.Identifier.ToString();
             var typeName = node.Type.ToString();
-            var accessor = node.AccessorList.Accessors
+            //TODO: MKI - add commandline parameter "publicOnly" and when true, filter by accessor in all Visit_XXX_Declaration methods
+            var accessor = node.AccessorList?.Accessors
                 .Where(x => !x.Modifiers.Select(y => y.Kind()).Contains(SyntaxKind.PrivateKeyword))
                 .Select(x => $"<<{(x.Modifiers.ToString() == "" ? "" : (x.Modifiers.ToString() + " "))}{x.Keyword}>>");
+
+            if (accessor == null) { return; }
 
             var useLiteralInit = node.Initializer?.Value?.Kind().ToString().EndsWith("LiteralExpression") ?? false;
             var initValue = useLiteralInit ? (" = " + node.Initializer.Value.ToString()) : "";
